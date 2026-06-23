@@ -27,3 +27,14 @@ export function createApiClient({ baseUrl = apiBaseUrl, fetchImpl = fetch, timeo
 }
 
 export const postJSON = createApiClient()
+
+// Fire-and-forget ping to wake the backend (free hosting can cold-start ~15–50s).
+// Called once on app load so the API is warming while the learner reads the intro,
+// making the first real AI request feel fast. Failures are ignored.
+export function warmBackend() {
+  try {
+    fetch(`${apiBaseUrl}/health`, { method: 'GET', cache: 'no-store' }).catch(() => {})
+  } catch {
+    /* ignore */
+  }
+}

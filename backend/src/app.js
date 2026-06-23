@@ -5,12 +5,25 @@ import grammarRouter from './features/grammar.js'
 import readingRouter from './features/reading.js'
 import { rateLimit } from './middleware/rateLimit.js'
 
+function isAllowedOrigin(origin) {
+  if (!origin) return true // same-origin / curl / server-to-server
+  if (config.allowedOrigins.includes(origin)) return true
+  try {
+    const { protocol, hostname } = new URL(origin)
+    // Allow the production frontend and any Vercel preview deployment.
+    if (protocol === 'https:' && hostname.endsWith('.vercel.app')) return true
+  } catch {
+    return false
+  }
+  return false
+}
+
 export function createApp() {
   const app = express()
   app.set('trust proxy', 1)
   app.use(cors({
     origin(origin, callback) {
-      if (!origin || config.allowedOrigins.includes(origin)) return callback(null, true)
+      if (isAllowedOrigin(origin)) return callback(null, true)
       const error = new Error('Origin is not allowed by CORS.')
       error.status = 403
       return callback(error)
