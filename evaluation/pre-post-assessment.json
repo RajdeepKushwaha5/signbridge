@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "status": "draft_pending_deaf_educator_review",
+  "audience": "ASL-using learners ages 12–18 developing written English",
+  "instructions": "Ask learners to rewrite each sentence independently. Do not show corrections during the assessment.",
+  "items": [
+    { "id": "01", "skill": "articles", "pre": "Book is under chair.", "post": "Dog waits beside gate.", "preReference": "The book is under the chair.", "postReference": "The dog waits beside the gate." },
+    { "id": "02", "skill": "tense", "pre": "Yesterday we walk home.", "post": "Last night I watch a movie.", "preReference": "Yesterday we walked home.", "postReference": "Last night I watched a movie." },
+    { "id": "03", "skill": "agreement", "pre": "She play chess.", "post": "My brother like science.", "preReference": "She plays chess.", "postReference": "My brother likes science." },
+    { "id": "04", "skill": "copula", "pre": "They ready for class.", "post": "He tired after practice.", "preReference": "They are ready for class.", "postReference": "He is tired after practice." },
+    { "id": "05", "skill": "plurals", "pre": "I saw three bird.", "post": "She has two notebook.", "preReference": "I saw three birds.", "postReference": "She has two notebooks." },
+    { "id": "06", "skill": "prepositions", "pre": "We go library after school.", "post": "He arrived station early.", "preReference": "We go to the library after school.", "postReference": "He arrived at the station early." },
+    { "id": "07", "skill": "topic_comment", "pre": "That homework, I finished.", "post": "The blue jacket, Maya wants.", "preReference": "I finished that homework.", "postReference": "Maya wants the blue jacket." },
+    { "id": "08", "skill": "word_order", "pre": "Tomorrow store I go.", "post": "Every morning breakfast she makes.", "preReference": "I will go to the store tomorrow.", "postReference": "She makes breakfast every morning." },
+    { "id": "09", "skill": "tense", "pre": "Next week we visited our cousin.", "post": "Two days ago they play basketball.", "preReference": "Next week we will visit our cousin.", "postReference": "Two days ago they played basketball." },
+    { "id": "10", "skill": "copula", "pre": "The room very cold.", "post": "I excited about the trip.", "preReference": "The room is very cold.", "postReference": "I am excited about the trip." }
+  ],
+  "scoring": { "independentCorrect": 2, "meaningPreservedWithTargetError": 1, "incorrectOrMeaningChanged": 0, "maximum": 20 }
+}

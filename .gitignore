@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+.env.local
+.vite
+.chrome-audit
+*.log
+evaluation/results
+DEMO-VIDEO.md
+.DS_Store
