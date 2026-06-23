@@ -1,6 +1,5 @@
 const environment = import.meta.env || {}
-const defaultApiBaseUrl = environment.PROD ? '' : 'http://localhost:3001'
-const apiBaseUrl = (environment.VITE_API_BASE_URL || defaultApiBaseUrl).replace(/\/$/, '')
+const apiBaseUrl = (environment.VITE_API_BASE_URL || 'http://localhost:3001').replace(/\/$/, '')
 
 export function createApiClient({ baseUrl = apiBaseUrl, fetchImpl = fetch, timeoutMs = 30_000 } = {}) {
   return async function request(path, payload) {
