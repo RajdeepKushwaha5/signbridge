@@ -393,7 +393,7 @@ progress::-moz-progress-bar { background: var(--accent); }
 .memory-panel__insight { margin: 0 0 16px; border-left: 3px solid var(--success); padding-left: 12px; font-family: 'Atkinson Hyperlegible', Arial, sans-serif; font-size: .84rem; line-height: 1.5; }
 .memory-panel__empty { margin: 0; color: var(--muted); font-family: 'Atkinson Hyperlegible', Arial, sans-serif; font-size: .82rem; line-height: 1.5; }
 .memory-panel ul { margin: 0; padding: 0; list-style: none; }
-.memory-panel li { display: grid; gap: 5px; border-bottom: 1px solid var(--line); padding: 11px 0; }
+.memory-panel li { display: grid; grid-template-columns: 1fr; gap: 5px; border-top: 0; border-bottom: 1px solid var(--line); padding: 11px 0; }
 .memory-panel li:last-child { border-bottom: 0; }
 .memory-panel li strong { font-size: .68rem; }
 .memory-panel li span { color: var(--muted); font-family: 'Atkinson Hyperlegible', Arial, sans-serif; font-size: .8rem; line-height: 1.35; }
