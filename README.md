@@ -4,6 +4,12 @@ SignBridge is an adaptive literacy tutor for Deaf and Hard-of-Hearing learners. 
 
 Built for **EdTech 3.0 — AI in Education Hackathon**, Track 3: Accessibility & Inclusive Learning.
 
+## Live links
+
+- **Live app:** https://signbridge-delta.vercel.app/
+- **Backend health:** https://signbridge-api-49qf.onrender.com/health
+- **GitHub repository:** https://github.com/RajdeepKushwaha5/signbridge
+
 ## Repository structure
 
 ```text
@@ -111,7 +117,13 @@ GEMINI_API_KEY_3=...        # optional failover
 ALLOWED_ORIGINS=https://your-vercel-domain.vercel.app
 ```
 
-After deployment, verify `https://your-render-domain.onrender.com/health`.
+For the current deployment:
+
+```text
+ALLOWED_ORIGINS=https://signbridge-delta.vercel.app
+```
+
+After deployment, verify `https://signbridge-api-49qf.onrender.com/health`.
 
 ## Deploy the frontend on Vercel
 
@@ -128,7 +140,13 @@ Set one Vercel environment variable:
 VITE_API_BASE_URL=https://your-render-domain.onrender.com
 ```
 
-Redeploy the frontend whenever this URL changes. Add the final Vercel URL to `ALLOWED_ORIGINS` on Render.
+For the current deployment:
+
+```text
+VITE_API_BASE_URL=https://signbridge-api-49qf.onrender.com
+```
+
+Redeploy the frontend whenever this URL changes. Add the final Vercel URL, currently `https://signbridge-delta.vercel.app`, to `ALLOWED_ORIGINS` on Render.
 
 ## Production checklist
 
