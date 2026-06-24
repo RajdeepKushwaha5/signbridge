@@ -211,10 +211,18 @@ function DiagnosisStage({ session, onContinue }) {
   const result = session.diagnosis
   const focusId = result.focusSkill.id
   const otherSkills = [...new Map(result.errors.filter((item) => item.skillId !== focusId).map((item) => [item.skillId, item])).values()]
+  const normalize = (text) => String(text || '').trim().toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ')
+  // In offline/fallback mode the tutor can only correct its reviewed sentences;
+  // for anything else "corrected" equals the input, so don't present a fake fix.
+  const noRealCorrection = result.mode === 'fallback' && normalize(result.corrected) === normalize(session.sentence)
   return (
     <div className="stage-stack" aria-live="polite">
       <div className="subsection-heading"><h3>Diagnosis complete</h3><span>{Math.round(result.confidence * 100)}% confidence</span></div>
-      <div className="sentence-comparison"><div><span>You wrote</span><p>{session.sentence}</p></div><div><span>Clear written English</span><p>{result.corrected}</p></div></div>
+      {noRealCorrection ? (
+        <div className="notice" role="status"><strong>Live tutor is busy</strong>SignBridge is in reviewed practice mode right now and can fully bridge its example sentences. Try an example above, or try your sentence again in a moment for a complete correction.</div>
+      ) : (
+        <div className="sentence-comparison"><div><span>You wrote</span><p>{session.sentence}</p></div><div><span>Clear written English</span><p>{result.corrected}</p></div></div>
+      )}
       <Panel label="Agent decision" meta={result.focusSkill.label}>
         <div className="agent-decision">
           <span>Focus skill</span>
