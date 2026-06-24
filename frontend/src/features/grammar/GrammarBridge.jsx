@@ -175,7 +175,35 @@ function InputStage({ text, setText, loading, onSubmit }) {
         <div className="subsection-heading"><h3 id="examples-title">Try an example</h3><span>ASL-influenced English</span></div>
         <div className="example-grid">{EXAMPLES.map((example, index) => <button key={example} onClick={() => onSubmit(example)} disabled={loading}><span>{String(index + 1).padStart(2, '0')}</span>{example}<b aria-hidden="true">-&gt;</b></button>)}</div>
       </section>
+      <BridgePatterns />
     </>
+  )
+}
+
+const BRIDGE_PATTERNS = [
+  { from: 'Topic / place first', to: 'English subject first', example: 'Store I go → I go to the store' },
+  { from: 'Time word, no tense change', to: 'English verb tense', example: 'go yesterday → went yesterday' },
+  { from: 'No article', to: 'a / an / the', example: 'book is mine → the book is mine' },
+  { from: 'Place idea', to: 'English preposition', example: 'go store → go to the store' },
+  { from: 'Description without “is”', to: 'English “to be”', example: 'she happy → she is happy' },
+  { from: 'One subject', to: 'verb + s', example: 'she play → she plays' },
+  { from: 'More than one', to: 'plural -s', example: 'three cat → three cats' },
+]
+
+function BridgePatterns() {
+  return (
+    <section className="bridge-patterns" aria-labelledby="patterns-title">
+      <div className="subsection-heading"><h3 id="patterns-title">Bridge patterns</h3><span>sign-influenced → written English</span></div>
+      <p className="bridge-patterns__intro">SignBridge is built on a contrastive learning model, not generic grammar correction. These are the language-transfer patterns it teaches.</p>
+      <ul className="bridge-patterns__list">
+        {BRIDGE_PATTERNS.map((pattern) => (
+          <li key={pattern.from}>
+            <div><strong>{pattern.from}</strong><b aria-hidden="true">→</b><strong>{pattern.to}</strong></div>
+            <small>{pattern.example}</small>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 

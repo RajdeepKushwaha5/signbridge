@@ -364,6 +364,14 @@ progress::-moz-progress-bar { background: var(--accent); }
 .review-badge > span { color: var(--accent); font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; }
 .review-badge p { margin: 0; color: var(--muted); font-family: 'Atkinson Hyperlegible', Arial, sans-serif; font-size: .82rem; line-height: 1.45; }
 
+.bridge-patterns { margin-top: 8px; }
+.bridge-patterns__intro { margin: 10px 0 16px; max-width: 640px; color: var(--muted); font-family: 'Atkinson Hyperlegible', Arial, sans-serif; font-size: .85rem; line-height: 1.5; }
+.bridge-patterns__list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.bridge-patterns__list li { display: grid; gap: 6px; padding: 12px 2px; border-bottom: 1px solid var(--line); }
+.bridge-patterns__list li > div { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: .76rem; }
+.bridge-patterns__list b { color: var(--accent); }
+.bridge-patterns__list small { color: var(--muted); font-family: 'Atkinson Hyperlegible', Arial, sans-serif; font-size: .82rem; }
+
 @media (max-width: 560px) {
   .proof-journey { grid-template-columns: 1fr; }
   .proof-journey > div + div { border-left: 0; border-top: 1px solid var(--line); }
