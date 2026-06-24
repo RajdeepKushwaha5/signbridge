@@ -181,6 +181,8 @@ function InputStage({ text, setText, loading, onSubmit }) {
 
 function DiagnosisStage({ session, onContinue }) {
   const result = session.diagnosis
+  const focusId = result.focusSkill.id
+  const otherSkills = [...new Map(result.errors.filter((item) => item.skillId !== focusId).map((item) => [item.skillId, item])).values()]
   return (
     <div className="stage-stack" aria-live="polite">
       <div className="subsection-heading"><h3>Diagnosis complete</h3><span>{Math.round(result.confidence * 100)}% confidence</span></div>
@@ -200,6 +202,12 @@ function DiagnosisStage({ session, onContinue }) {
           </details>
         </div>
       </Panel>
+      {otherSkills.length > 0 && (
+        <div className="agent-also">
+          <span>Also noticed — not teaching yet</span>
+          <p>{otherSkills.map((item) => item.label).join(', ')}. The agent is teaching <strong>{result.focusSkill.label}</strong> first because it gives the fastest useful improvement.</p>
+        </div>
+      )}
       <div className="learning-notes">{result.errors.map((item, index) => <article key={`${item.skillId}-${index}`}><span>{String(index + 1).padStart(2, '0')}</span><div><h4>{item.label}</h4><p>{item.explanation}</p><small>Remember / {item.tip}</small></div></article>)}</div>
       <StageAction label="Open the visual concept bridge" detail="See what stays, changes, and moves" onClick={onContinue} />
     </div>
@@ -259,6 +267,7 @@ function ConceptBridgeStage({ session, dispatch, onContinue }) {
     <div className="stage-stack concept-stage" aria-live="polite">
       <div className="subsection-heading"><h3>Visual concept bridge</h3><span>{bridge.cards.length} meaning roles</span></div>
       <p className="concept-intro">There is no single universal ASL order. These cards show how <strong>your sentence</strong> carries meaning and how written English organizes the same idea.</p>
+      <ReviewBadge />
 
       <Panel label="Your thought structure" meta="meaning preserved">
         <div className="concept-track concept-track--source">
@@ -393,9 +402,18 @@ function SummaryStage({ session, profile, extras, onRestart, onNavigate, onRevie
         <span>{goalMet ? 'Goal met' : 'Goal in progress'}</span>
         <p>{goalMet ? 'You used the new skill in a brand-new sentence — that is real learning.' : 'You finished the session. Try another to reach an independent transfer.'}</p>
       </div>
-      <Panel label="Session complete" meta={`${elapsed} min`}>
-        <div className="session-summary"><p>Skill practiced</p><h3>{skill.label}</h3><div className="summary-metrics"><div><strong>{skill.mastery}%</strong><span>mastery</span></div><div><strong>{session.guided.result?.correct ? 'yes' : 'with help'}</strong><span>guided rewrite</span></div><div><strong>{goalMet ? 'yes' : 'not yet'}</strong><span>unseen transfer</span></div></div><p className="next-review"><strong>Next review /</strong> {new Date(skill.nextReview).toLocaleDateString()}</p></div>
+      <Panel label="Learning proof" meta={`${elapsed} min`}>
+        <div className="session-summary">
+          <div className="proof-journey">
+            <div><span>You wrote</span><p>{session.sentence}</p></div>
+            <div><span>Clear written English</span><p>{session.diagnosis.corrected}</p></div>
+          </div>
+          <p>Skill practiced</p><h3>{skill.label}</h3>
+          <div className="summary-metrics"><div><strong>{skill.mastery}%</strong><span>mastery</span></div><div><strong>{session.guided.result?.correct ? 'yes' : 'with help'}</strong><span>guided rewrite</span></div><div><strong>{goalMet ? 'yes' : 'not yet'}</strong><span>unseen transfer</span></div></div>
+          <p className="next-review"><strong>Next review /</strong> {new Date(skill.nextReview).toLocaleDateString()}</p>
+        </div>
       </Panel>
+      <ReviewBadge />
       {profile.insights[0] && <div className="memory-callout"><span>What the agent remembered</span><p>{profile.insights[0].message}</p></div>}
       {session.nextAction && (
         <div className="agent-route agent-route--summary"><span>Recommended next route</span><strong>{session.nextAction.label}</strong><p>{session.nextAction.description}</p>
@@ -412,6 +430,15 @@ function SummaryStage({ session, profile, extras, onRestart, onNavigate, onRevie
         </div>
       )}
       <StageAction label="Start another session" detail="The agent will choose the next useful skill" onClick={onRestart} />
+    </div>
+  )
+}
+
+function ReviewBadge() {
+  return (
+    <div className="review-badge" role="note">
+      <span>Pending Deaf-educator review</span>
+      <p>The concept cards are contrastive learning aids — not a claim about a single universal sign-language word order.</p>
     </div>
   )
 }
