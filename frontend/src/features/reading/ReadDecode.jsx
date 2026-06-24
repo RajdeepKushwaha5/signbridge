@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from 'react'
 import { Panel, SectionTitle } from '../../shared/components/Panel.jsx'
+import { FreeTierNotice } from '../../shared/components/FreeTierNotice.jsx'
 import { generateFromText, generatePassage, passageImageUrl, signRefUrl, LEVELS, TOPICS } from './reading.service.js'
 import { extractPdfText } from './pdfText.js'
 import { getLevel, recordQuiz } from './reading.store.js'
@@ -178,12 +179,7 @@ export default function ReadDecode({ onPracticeWord }) {
 
       {passage && (
         <div className="reading-workspace">
-          {passage.mode === 'fallback' && (
-            <div className="notice" role="status">
-              <strong>Reliable practice mode</strong>
-              The live AI was busy, so SignBridge loaded a reviewed passage. Your reading practice still works.
-            </div>
-          )}
+          {passage.mode === 'fallback' && <FreeTierNotice />}
           {passage.skillFocus && (
             <div className="notice" role="status">
               <strong>Personalized for you</strong>

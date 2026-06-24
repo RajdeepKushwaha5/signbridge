@@ -234,6 +234,9 @@ button { color: inherit; }
 .notice strong { color: var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; }
 .notice--error { border-left-color: var(--danger); background: #f8e5e1; color: var(--danger); }
 .notice--success { border-left-color: var(--success); background: #e4eee3; }
+.notice--info { border-left-color: var(--line-strong); background: var(--paper-deep); color: var(--muted); }
+.notice--info strong { color: var(--ink); }
+.notice--info b { color: var(--accent); font-weight: 700; }
 
 .result-section { display: grid; gap: 16px; margin-top: 10px; }
 .sentence-comparison { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); }

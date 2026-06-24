@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { Panel, SectionTitle } from '../../shared/components/Panel.jsx'
+import { FreeTierNotice } from '../../shared/components/FreeTierNotice.jsx'
 import { bridgeSentence, checkPractice } from './grammar.service.js'
 import { exportProfile, getProfile, getProfileSummary, getSkillsInFocus, importProfile, recordAssessment, recordDiagnosisObservation, recordSession, resetProfile } from './grammar.store.js'
 import { initialSession, restoreSession, SESSION_KEY, sessionReducer } from './sessionMachine.js'
@@ -116,9 +117,7 @@ export default function GrammarBridge({ onNavigate }) {
           {session.stage === 'summary' && <SummaryStage session={session} profile={profile} extras={summaryExtras} onRestart={startNewSession} onNavigate={onNavigate} onReviewBridge={() => dispatch({ type: 'SHOW_CONCEPT' })} />}
 
           {error && <div className="notice notice--error" role="alert"><strong>Request paused</strong>{error}</div>}
-          {session.diagnosis?.mode === 'fallback' && session.stage !== 'input' && (
-            <div className="notice" role="status"><strong>Reliable practice mode</strong>The live AI was unavailable, so SignBridge loaded a reviewed built-in lesson. Your progress still counts.</div>
-          )}
+          {session.diagnosis?.mode === 'fallback' && session.stage !== 'input' && <FreeTierNotice />}
         </div>
 
         <aside className="workspace-aside">
@@ -219,7 +218,10 @@ function DiagnosisStage({ session, onContinue }) {
     <div className="stage-stack" aria-live="polite">
       <div className="subsection-heading"><h3>Diagnosis complete</h3><span>{Math.round(result.confidence * 100)}% confidence</span></div>
       {noRealCorrection ? (
-        <div className="notice" role="status"><strong>Live tutor is busy</strong>SignBridge is in reviewed practice mode right now and can fully bridge its example sentences. Try an example above, or try your sentence again in a moment for a complete correction.</div>
+        <>
+          <FreeTierNotice />
+          <div className="notice" role="status">For a full grammar bridge right now, try one of the example sentences above.</div>
+        </>
       ) : (
         <div className="sentence-comparison"><div><span>You wrote</span><p>{session.sentence}</p></div><div><span>Clear written English</span><p>{result.corrected}</p></div></div>
       )}
