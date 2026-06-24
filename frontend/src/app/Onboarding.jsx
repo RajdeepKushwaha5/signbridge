@@ -24,6 +24,16 @@ const STEPS = [
       'SignBridge remembers the misconception and chooses your next route.',
     ],
   },
+  {
+    eyebrow: 'One toolkit',
+    title: (<>write, read, and <span>sign</span>.</>),
+    steps: [
+      'Grammar Bridge — diagnose and practice one skill at a time.',
+      'Read & Decode — leveled, illustrated stories, or your own PDF.',
+      'Fingerspell — practice the manual alphabet live on camera.',
+      'Teacher view — track mastery and export a progress report.',
+    ],
+  },
 ]
 
 export default function Onboarding({ onClose }) {

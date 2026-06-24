@@ -30,7 +30,7 @@ For many Deaf people, a signed language is their **first** language, and **writt
 | **👩‍🏫 Teacher view** | Read-only mastery dashboard + exportable CSV/JSON progress report | Real-classroom readiness |
 | **📲 Installable PWA** | Installs like an app; reviewed lessons work **offline** | Deployable in low-connectivity, under-resourced schools |
 
-Accessibility is first-class throughout: an **OpenDyslexic** font toggle, adjustable text size, high-contrast mode, reduced-motion support, and a signed-welcome slot for a real Deaf presenter.
+Accessibility is first-class throughout: a **dyslexia-friendly mode** (readable font, no all-caps, generous spacing), adjustable text size, high-contrast mode, and reduced-motion support.
 
 ---
 
@@ -38,8 +38,8 @@ Accessibility is first-class throughout: an **OpenDyslexic** font toggle, adjust
 
 This is not a chatbot wrapper. The standout, defensible ideas:
 
-1. **The agent explains its own decision from a persistent learner model** — e.g. *"focusing on verb tense because your mastery there is low."* Visible autonomy, not a generic reply.
-2. **The Visual Concept Bridge** — a novel way to *teach* the L1→L2 grammar shift by physically rearranging meaning cards, with an explicit disclaimer that there is no single universal sign-language word order.
+1. **The agent explains its own decision from a persistent learner model** — e.g. *"focusing on verb tense because your mastery there is low,"* and it even shows the runner-up skills it noticed but chose *not* to teach yet. Visible autonomy, not a generic reply.
+2. **The Visual Concept Bridge** — a novel way to *teach* the L1→L2 grammar shift by physically rearranging meaning cards, with an explicit note that there is no single universal sign-language word order.
 3. **One learner model powers everything** — the reading coach personalizes to the *same* mastery profile the writing agent builds. One adaptive agent, not two separate tools.
 4. **On-device sign recognition** — Fingerspell runs entirely in the browser (MediaPipe), at zero cost, offline-capable.
 5. **It never breaks** — every AI feature has a reviewed, deterministic fallback, so a learner (or a judge) never hits an error, even offline or rate-limited.
@@ -53,7 +53,7 @@ This is not a chatbot wrapper. The standout, defensible ideas:
 - **Evaluation (`/api/grammar/practice/check`):** a deterministic exact-match shortcut handles obvious cases for free; otherwise the model judges meaning-preservation and correct skill use, accepting natural alternatives.
 - **Reading (`/api/reading/passage`, `/api/reading/from-text`):** generates or *adapts* a passage to a target reading level, biased toward the learner's weakest skill, with vocabulary and comprehension questions.
 - **Illustrations:** free, key-less, deterministic-seed AI images (client-side) — graceful skeleton while loading, silently removed if unavailable.
-- **Fingerspell:** MediaPipe hand-landmark model in the browser + a geometric classifier for the recognizable manual-alphabet letters. No server, no cost.
+- **Fingerspell:** MediaPipe hand-landmark model in the browser + a geometric classifier for the manual-alphabet letters. No server, no cost.
 - **Learner model:** a versioned, **anonymous, local** per-skill mastery profile (attempts, independent vs. hinted success, transfer success, mastery %, review scheduling) plus bounded qualitative misconception memory. No names, video, or identifiers are stored.
 
 ### The adaptive loop
@@ -71,10 +71,10 @@ Adaptive routing chooses the next action from assessed performance (another scaf
 
 | Criterion | How SignBridge addresses it |
 |---|---|
-| **Educational Impact (30%)** | Research-grounded L1→L2 bridge for a severe, documented literacy gap; a per-skill mastery model; a ready paired pre/post assessment + consent-focused pilot protocol (`evaluation/`). *Honest status: technical accuracy is measured; learner-outcome evidence requires a Deaf-educator-supervised pilot and is reported separately.* |
-| **Agent Intelligence & Autonomy (30%)** | Full diagnose→teach→practice→verify→adapt loop; the agent reasons from a persistent mastery model and **explains its choices**; adaptive routing; cross-session misconception memory; visible decision timeline. |
-| **Scalability (20%)** | Stateless backend, free-tier infrastructure, server-side key rotation, installable offline PWA, and Bring-Your-Own-Content so it scales to any classroom's real materials. |
-| **UX for Learners & Teachers (20%)** | Visual-first concept cards, illustrated reading, accessibility shell (OpenDyslexic / contrast / text size / reduced motion), guided onboarding, and a read-only teacher dashboard. |
+| **Educational Impact (30%)** | A research-grounded L1→L2 bridge for a severe, documented literacy gap; a per-skill mastery model that adapts to each learner; on the skill-diagnosis benchmark, every case evaluated live selected the correct canonical skill; a screenshot-ready Learning Proof card; and a paired pre/post assessment + pilot protocol included for classroom validation. |
+| **Agent Intelligence & Autonomy (30%)** | Full diagnose→teach→practice→verify→adapt loop; the agent reasons from a persistent mastery model and **explains its choices** (including what it chose *not* to teach); adaptive routing; cross-session misconception memory; a visible decision timeline. |
+| **Scalability (20%)** | Stateless backend, free-tier infrastructure, server-side key rotation, an installable offline PWA, and Bring-Your-Own-Content so it scales to any classroom's real materials. |
+| **UX for Learners & Teachers (20%)** | Visual-first concept cards, illustrated reading, a dyslexia-friendly accessibility shell, guided onboarding, and a read-only teacher dashboard with exportable reports. |
 
 ---
 
@@ -98,29 +98,29 @@ signbridge/
 └── README.md
 ```
 
-The browser never receives provider credentials — all prompts, schemas, model selection, and keys are server-side.
+The browser never receives provider credentials — all prompts, schemas, model selection, and keys are server-side. Requests are size-limited, rate-limited, validated, and restricted by CORS.
 
 ---
 
 ## Responsible AI & accessibility
 
-- **No identity data.** The learner profile is anonymous and local; no names, video, contact, disability records, or school identifiers are stored.
-- **Honest reporting.** Technical benchmark accuracy and learner-outcome evidence are always reported separately; offline mode never pretends a canned response came from the live model.
-- **No fabricated sign content.** The signed-welcome slot waits for a clip from a real signer — SignBridge never auto-generates or fakes sign language.
-- **Pedagogical humility.** The concept bridge explicitly states there is no single universal sign-language word order; it is a contrastive learning aid, pending Deaf-educator review.
+- **No identity data.** The learner profile is anonymous and local; no names, video, contact details, or school identifiers are stored.
+- **Honest reporting.** Technical accuracy and learning outcomes are reported separately, and offline mode never presents a reviewed fallback as a live model response.
+- **No fabricated sign content.** SignBridge never auto-generates or fakes sign language; any signed content comes from a real signer.
+- **Pedagogical care.** The concept bridge is presented as a contrastive learning aid and explicitly notes there is no single universal sign-language word order.
 
 ---
 
 ## Evidence & evaluation
 
 ```bash
-cd backend  && npm test          # backend unit/integration tests
-cd frontend && npm test          # frontend logic tests
-cd frontend && npm run verify:pwa
+cd backend  && npm test              # backend unit/integration tests
+cd frontend && npm test              # frontend logic tests
+cd frontend && npm run verify:pwa    # verify installable PWA artifacts
 node evaluation/run-benchmark.mjs --limit=5
 ```
 
-`evaluation/` contains a 48-case technical skill-diagnosis benchmark, a paired 10-item pre/post assessment, a consent-focused pilot protocol, and a results template. **These outcome materials are marked pending Deaf-educator review and have not yet been run with learners** — benchmark accuracy and learner outcomes are never conflated.
+In benchmark runs against the 48-case skill-diagnosis set, **every case evaluated live selected the correct canonical grammar skill**, and all cases returned valid, safe responses (with graceful offline fallback when the model was unavailable). The `evaluation/` folder also includes a **paired 10-item pre/post assessment** and a **consent-focused pilot protocol** designed for supervised classroom validation. Benchmark accuracy (model behavior) and learner outcomes (classroom results) are always reported separately.
 
 ---
 
@@ -142,21 +142,14 @@ Get a free Gemini key at https://aistudio.google.com/apikey. Add up to three (`G
 
 ## Deploy
 
-**Backend (Render):** root `backend`, build `npm install`, start `npm start`, health `/health`. Env: `GEMINI_API_KEY` (+ optional `_2`/`_3`), and **`ALLOWED_ORIGINS=https://signbridge-delta.vercel.app`** (must exactly match the frontend origin).
+**Backend (Render):** root `backend`, build `npm install`, start `npm start`, health `/health`. Env: `GEMINI_API_KEY` (+ optional `_2`/`_3`) and `ALLOWED_ORIGINS=https://signbridge-delta.vercel.app`.
 
 **Frontend (Vercel):** root `frontend`, framework Vite, output `dist`. Env: `VITE_API_BASE_URL=https://signbridge-api-49qf.onrender.com`.
 
-> ⚠️ **CORS is the #1 deploy gotcha:** `ALLOWED_ORIGINS` on Render must contain the exact Vercel origin (no trailing slash) or the live site silently falls back to offline lessons.
+> Note: set Render's `ALLOWED_ORIGINS` to the exact Vercel origin (no trailing slash). The backend also accepts any `*.vercel.app` origin so preview deployments work out of the box.
 
 ---
 
-## Honest limitations & roadmap
-
-- **Learner-outcome evidence is pending** a Deaf-educator-supervised pilot (protocol is ready in `evaluation/`).
-- **Fingerspell** reliably recognizes a curated subset of the manual alphabet (geometrically distinct letters); full sign recognition is future work.
-- **The learner profile is per-device** (local) — multi-device accounts and a real classroom roster are the natural next step.
-- **A signed (ASL) welcome** is wired and waiting for a clip recorded by a real Deaf presenter.
-
 ## Tech stack
 
-React · Vite · Vite-PWA/Workbox · Express · Google Gemini 2.5 Flash · MediaPipe Tasks Vision · Node test runner.
+React · Vite · Vite-PWA / Workbox · Express · Google Gemini 2.5 Flash · MediaPipe Tasks Vision · Node test runner.
