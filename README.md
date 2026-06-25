@@ -1,749 +1,205 @@
-# SignBridge - from sign to sentence
+# SignBridge
 
-**An AI literacy bridge for Deaf and sign-first learners.**
+> from sign to sentence
 
-SignBridge is not just an English tutor and not a grammar checker. It is an adaptive learning system that helps Deaf and sign-first learners move between **sign-language thinking**, **written English**, **visual reading**, **fingerspelling**, and **teacher-visible progress**.
+SignBridge is an AI literacy platform for Deaf and sign-first learners. It addresses a long-standing equity gap in education: written language is usually taught to Deaf students as if it were their first language, when for many it is a *second* language acquired through a different, visual-spatial modality. SignBridge bridges sign-language thinking and written literacy across writing, reading, vocabulary, fingerspelling, and teacher-visible progress, in one adaptive system.
 
-Built for **EdTech 3.0 - AI in Education Hackathon**  
-Primary track: **Track 3 - Accessibility & Inclusive Learning**  
-Also relevant to: **Track 1 - AI Tutors & Personalized Learning**
+**Live app:** https://signbridge-delta.vercel.app/
+**Repository:** https://github.com/RajdeepKushwaha5/signbridge
+**Backend health:** https://signbridge-api-49qf.onrender.com/health
 
-- Live app: https://signbridge-delta.vercel.app/
-- Backend health: https://signbridge-api-49qf.onrender.com/health
-- Repository: https://github.com/RajdeepKushwaha5/signbridge
+Built for the EdTech 3.0 AI in Education Hackathon (Track 3: Accessibility & Inclusive Learning).
 
 ---
 
-## The one-line pitch
+## Table of contents
 
-**SignBridge maps a learner's sign-influenced sentence into visual meaning cards, teaches one useful written-English pattern, proves learning with an unseen transfer sentence, remembers misconceptions, and helps teachers turn real classroom content into accessible literacy practice.**
-
----
-
-## Why this matters
-
-For many Deaf learners, sign language is their first language. It is the language they think in, learn in, and express ideas in.
-
-Written English is a different language system:
-
-- English has different word order.
-- English uses small grammar words like `a`, `the`, `is`, and `to`.
-- English changes verbs to show time, like `go` becoming `went`.
-- Sign languages often express meaning visually and spatially.
-
-Most education tools treat Deaf learners' writing as ordinary English errors. SignBridge treats it as a **language bridge problem**.
-
-The learner is not "bad at English." The learner is crossing from one language structure into another. SignBridge makes that crossing visible, teachable, measurable, and adaptive.
+- [The problem](#the-problem)
+- [Overview](#overview)
+- [Features](#features)
+- [How it works](#how-it-works)
+- [Architecture](#architecture)
+- [AI and on-device pipeline](#ai-and-on-device-pipeline)
+- [Quick start](#quick-start)
+- [Deployment](#deployment)
+- [Project structure](#project-structure)
+- [Accessibility and responsible AI](#accessibility-and-responsible-ai)
+- [Tech stack](#tech-stack)
 
 ---
 
-## What SignBridge is
+## The problem
 
-SignBridge is a multi-part AI literacy workspace:
+For many Deaf people, a signed language is their first language. It is the language they think in, learn in, and express ideas in. Written English is a separate language system with different word order, grammar words such as `a`, `the`, `is`, and `to`, and verb changes that mark time (for example, `go` becoming `went`).
 
-1. **Grammar Bridge** - an adaptive AI writing agent.
-2. **Visual Concept Bridge** - visual role cards that show how meaning transforms into written-English structure.
-3. **Read & Decode** - an adaptive reading coach with visual passages, vocabulary support, and quizzes.
-4. **Bring Your Own Content** - paste text or upload a PDF and turn classroom material into an accessible reading lesson.
-5. **Fingerspell** - live on-device ASL manual alphabet practice with webcam hand tracking.
-6. **Teacher View** - read-only mastery dashboard with CSV/JSON export.
-7. **Offline PWA** - installable app shell and reviewed fallback lessons for low-connectivity settings.
-8. **Accessibility shell** - dyslexia-friendly mode, text scaling, high contrast, and reduced-motion support.
+When a Deaf learner writes English, they are crossing from one language structure into another. Most educational tools treat the result as ordinary spelling and grammar errors, which misses the real task. The outcome is one of education's most overlooked equity gaps: in some regions, a majority of Deaf adults read below grade level, not from any lack of ability, but from instruction that never makes the bridge between their two languages visible and teachable.
+
+SignBridge is built around that bridge.
+
+---
+
+## Overview
+
+SignBridge combines an adaptive writing tutor, a reading coach, sign-aware vocabulary and fingerspelling practice, and a teacher dashboard, all driven by a single learner model.
+
+The learner writes a sentence in their own way. An AI agent identifies one high-value written-English pattern, explains why it chose that pattern, teaches it through visual meaning cards, supports the learner with graduated hints, and then verifies real learning with a new, unseen sentence. Progress is tracked per skill and surfaced to teachers, and the same learner model personalizes reading practice.
+
+---
+
+## Features
+
+**Grammar Bridge.** An adaptive writing agent that diagnoses one focus skill, explains its choice (and what it noticed but chose not to teach yet), gives a short lesson and guided practice with graduated hints, and confirms learning with an unseen transfer sentence. The session ends with a Learning Proof card summarizing the journey.
+
+**Visual Concept Bridge.** The learner's sentence is broken into meaning cards (`TIME`, `TOPIC`, `PERSON`, `ACTION`, `OBJECT`, `PLACE`). The learner rearranges them into written-English order and sees the changed words highlighted, making the language transformation visible rather than abstract.
+
+**Read & Decode.** An adaptive reading coach that generates illustrated, leveled passages with key vocabulary and a comprehension quiz, and adjusts the reading level based on performance. It reinforces the learner's weakest skill using the same mastery profile the writing agent builds.
+
+**Bring Your Own Content.** Teachers paste classroom text or upload a PDF, and SignBridge turns real material into an accessible, leveled reading lesson with vocabulary and questions.
+
+**Fingerspell.** Webcam-based practice of the ASL manual alphabet using on-device hand tracking. Vocabulary from Read & Decode can be sent here for handshape practice. No video is uploaded and there is no per-use AI cost.
+
+**Teacher view.** A read-only dashboard showing mastery across eight grammar skills, skills needing support, recent sessions, and milestones, with CSV and JSON export.
+
+**Offline and installable.** An installable Progressive Web App with reviewed fallback lessons, so core practice keeps working in low-connectivity settings.
+
+**Accessibility shell.** A dyslexia-friendly mode (readable font, no all-caps, generous spacing), adjustable text size, high contrast, and reduced-motion support, applied across the whole app.
+
+---
+
+## How it works
 
 The core learning loop:
 
 ```text
-write -> diagnose -> visual bridge -> mini lesson -> guided rewrite
-      -> hints/retry -> unseen transfer -> mastery update -> session summary
+write -> diagnose -> visual concept bridge -> mini lesson -> guided rewrite
+      -> graduated hints / retry -> unseen transfer -> mastery update -> session summary
 ```
 
----
+The agent selects one of eight canonical skills, explains the reason for its choice, and adapts the next step from the learner's performance, choosing between another scaffold, a visual explanation, reading reinforcement, an unseen transfer, or a harder mastery challenge. A visible decision timeline records what the agent observed, selected, and changed, and a bounded, anonymous learner profile remembers recurring misconceptions across sessions.
 
-## What makes this different
-
-### 1. It is not a chatbot wrapper
-
-A chatbot can correct a sentence. SignBridge runs a full tutoring loop:
-
-- selects one focus skill,
-- explains why it selected that skill,
-- avoids teaching every error at once,
-- uses visual concept cards,
-- gives graduated hints,
-- verifies with unseen transfer,
-- updates deterministic mastery,
-- remembers qualitative misconceptions,
-- chooses the next route.
-
-### 2. It teaches the bridge, not just the answer
-
-For example:
+A worked example:
 
 ```text
-Learner writes: Store I go yesterday.
-Written English: I went to the store yesterday.
+Learner writes:   Store I go yesterday.
+Written English:  I went to the store yesterday.
 ```
 
-SignBridge does not only output the correction. It maps the idea into role cards:
-
-- `PLACE`: store -> to the store
-- `PERSON`: I -> I
-- `ACTION`: go -> went
-- `TIME`: yesterday -> yesterday
-
-Then the learner sees the same meaning reorganized into written-English structure.
-
-### 3. It makes AI reasoning visible
-
-The learner and judge can see:
-
-- why the agent chose the focus skill,
-- what else it noticed but did not teach yet,
-- confidence,
-- the agent decision timeline,
-- the next route selected by the agent.
-
-### 4. It remembers real misconceptions
-
-SignBridge stores meaningful learning patterns, not personal identity.
-
-Example:
+The Visual Concept Bridge maps the idea into cards and reorganizes them into written-English structure:
 
 ```text
-You previously omitted past-tense markers twice.
-Today you marked the time on the verb independently.
+PLACE   store     -> to the store
+PERSON  I         -> I
+ACTION  go        -> went
+TIME    yesterday -> yesterday
 ```
 
-This is stronger than a simple score because it tells the learner and teacher what is changing.
-
-### 5. It proves learning with unseen transfer
-
-The learner does not just copy a corrected sentence. After guided practice, SignBridge gives a new sentence that tests the same skill.
-
-This checks whether the learner can apply the pattern independently.
-
-### 6. It connects writing, reading, vocabulary, fingerspelling, and teacher evidence
-
-One learner profile powers the literacy experience. The writing agent builds the mastery profile, and the reading coach can use the same profile to reinforce weak skills in stories.
-
----
-
-## Core use cases
-
-### Use case 1: A learner writes the way they think
-
-The learner enters:
-
-```text
-Store I go yesterday.
-```
-
-SignBridge:
-
-- preserves the intended meaning,
-- diagnoses one high-value written-English pattern,
-- chooses a focus skill such as verb tense,
-- explains why it chose the skill,
-- shows the corrected sentence,
-- opens the Visual Concept Bridge.
-
-### Use case 2: The learner sees how English changes
-
-The Visual Concept Bridge separates meaning into cards:
-
-- `TIME`
-- `TOPIC`
-- `PERSON`
-- `ACTION`
-- `OBJECT`
-- `PLACE`
-
-The learner can rebuild the sentence by moving cards into written-English order. Changed words are highlighted.
-
-Important design note: SignBridge does **not** claim there is one universal ASL or sign-language word order. The cards are a contrastive learning aid.
-
-### Use case 3: The learner gets supported practice
-
-The learner tries a guided rewrite. If the answer is wrong:
-
-1. Hint 1 gives a reusable rule.
-2. Hint 2 gives a sentence scaffold.
-3. A model answer appears only after final support is needed.
-
-This teaches before revealing.
-
-### Use case 4: The learner proves transfer
-
-After guided success, the learner gets a new sentence. This is the unseen transfer step.
-
-Independent transfer gives the largest mastery gain because it is stronger evidence of learning.
-
-### Use case 5: The teacher brings real material
-
-A teacher can paste a paragraph or upload a PDF worksheet. SignBridge turns it into:
-
-- a leveled reading passage,
-- short visual lines,
-- key vocabulary,
-- visual/sign-related vocabulary cues,
-- comprehension questions,
-- an adaptive reading level update.
-
-### Use case 6: The learner connects print to fingerspelling
-
-Vocabulary from Read & Decode can be sent to Fingerspell. The learner practices the word through handshapes.
-
-Fingerspell runs on-device with MediaPipe hand tracking:
-
-- no video upload,
-- no server-side video processing,
-- no per-use AI cost,
-- private by design.
-
-### Use case 7: The teacher sees evidence
-
-Teacher View shows:
-
-- sessions completed,
-- skills practiced,
-- reading level,
-- mastery across eight grammar skills,
-- skills needing support,
-- recent sessions,
-- milestones,
-- CSV/JSON export.
-
-In this hackathon version, the profile is local and anonymous. In a production classroom version, this can expand into accounts, rosters, and multi-learner dashboards.
-
----
-
-## Feature inventory
-
-### Grammar Bridge
-
-- AI diagnosis of sign-influenced written English.
-- Single focus skill selection.
-- `Why this skill?` reasoning.
-- `Also noticed, not teaching yet` explanation.
-- Meaning-preserving correction.
-- Mini lesson.
-- Guided rewrite.
-- Two graduated hints.
-- Model support only after failed attempts.
-- Unseen transfer practice.
-- Deterministic mastery update.
-- Session summary.
-- Learning Proof card.
-
-### Visual Concept Bridge
-
-- Role cards: `TIME`, `TOPIC`, `PERSON`, `ACTION`, `OBJECT`, `PLACE`.
-- Learner thought structure.
-- Written-English structure.
-- Interactive card movement.
-- Transformation/reveal support.
-- Changed-word highlighting.
-- Respectful note that concept cards are a learning aid, not a universal sign-language grammar claim.
-
-### Agent intelligence
-
-- Canonical skill model.
-- Visible agent decision reason.
-- Agent decision timeline.
-- Adaptive route selection:
-  - another scaffold,
-  - visual explanation,
-  - reading reinforcement,
-  - unseen transfer,
-  - mastery challenge.
-- Qualitative misconception memory.
-- Local profile used across sessions.
-
-### Learner profile and mastery
-
-- Versioned local profile.
-- Per-skill attempts.
-- Independent successes.
-- Hinted successes.
-- Transfer successes.
-- Streak.
-- Mastery percentage.
-- Mastered status.
-- Last practiced date.
-- Next review date.
-- Bounded session history.
-- JSON export/import/reset.
-- Legacy profile migration.
-
-### Read & Decode
-
-- AI-generated reading passages.
-- Level 1-5 adaptive reading.
-- Visual/short-line passage style.
-- Key vocabulary cards.
-- Visual or sign-related vocabulary cues.
-- Comprehension quiz.
-- Reading level adjustment.
-- Skill-focused reading reinforcement from the same learner profile.
-
-### Bring Your Own Content
-
-- Paste classroom text.
-- Upload PDF.
-- Extract PDF text in the browser.
-- Adapt real material into a leveled lesson.
-- Fallback mode preserves readable chunks if live AI is unavailable.
-
-### Fingerspell
-
-- Webcam-based ASL manual alphabet practice.
-- MediaPipe hand landmarks.
-- Geometric classifier for recognizable letters.
-- Word practice.
-- Vocabulary handoff from Read & Decode.
-- On-device and private.
-- No uploaded video.
-
-### Teacher View
-
-- Skill mastery table.
-- Lowest-mastery skills needing support.
-- Recent sessions.
-- Reading level summary.
-- Milestones.
-- CSV export.
-- JSON export.
-
-### Accessibility
-
-- Dyslexia-friendly mode.
-- Adjustable text size.
-- High contrast.
-- Reduced-motion support.
-- Keyboard-accessible flow.
-- Caption-first demo guidance.
-- Sign-welcome slot for a real signer, without fabricating sign language.
-
-### Reliability and deployment
-
-- Vercel frontend.
-- Render backend.
-- Health endpoint.
-- CORS configuration for Vercel deployments.
-- Server-side API keys only.
-- Gemini key rotation across up to three keys.
-- Timeout and retry behavior.
-- Strict JSON schemas.
-- Server-side validation.
-- Local deterministic fallbacks.
-- Installable PWA.
-- Offline-ready app shell.
-
----
-
-## The eight canonical grammar skills
-
-SignBridge does not give random grammar advice. It normalizes every diagnosis into one of eight canonical skills:
-
-| Skill | What it teaches |
-|---|---|
-| Articles | `a`, `an`, `the` before nouns |
-| Verb tense | marking time through verbs, such as `go` -> `went` |
-| Subject-verb agreement | matching subject and verb, such as `she plays` |
-| Copula / to be | using `am`, `is`, `are` |
-| Plurals | marking more than one, such as `cat` -> `cats` |
-| Prepositions | connectors like `to`, `at`, `in`, `on` |
-| Topic-comment transfer | rebuilding topic-first ideas into written-English order |
-| English word order | subject -> verb -> object structure |
-
----
-
-## AI pipeline
-
-### Model
-
-SignBridge uses **Google Gemini 2.5 Flash** through a backend-only API layer.
-
-The frontend never receives Gemini credentials.
-
-### Diagnosis endpoint
-
-`POST /api/grammar/bridge`
-
-Inputs:
-
-- learner sentence,
-- local mastery profile summary,
-- qualitative misconception memory.
-
-Outputs:
-
-- corrected sentence,
-- meaning-preservation flag,
-- confidence,
-- detected errors,
-- one focus skill,
-- decision reason,
-- Visual Concept Bridge cards,
-- mini lesson,
-- guided practice,
-- unseen transfer practice,
-- encouragement,
-- response mode (`live` or `fallback`).
-
-### Practice checking endpoint
-
-`POST /api/grammar/practice/check`
-
-Checks whether the learner's rewrite:
-
-- preserves meaning,
-- uses the target skill,
-- should advance or retry,
-- should receive hint or model support.
-
-### Reading endpoints
-
-`POST /api/reading/passage`  
-`POST /api/reading/from-text`
-
-These generate or adapt reading content using the learner profile when available.
-
----
-
-## Reliability model
-
-Hackathon demos often fail because the model rate-limits or returns malformed output. SignBridge is designed not to break.
-
-If live AI is unavailable:
-
-- grammar loads reviewed fallback lessons,
-- reading loads reviewed passages or readable chunks,
-- practice still gives hints and support,
-- the UI clearly labels reliable practice mode,
-- fallback is never presented as live AI.
-
-This is important for real schools as well as demos. A student should not lose a learning session just because the model provider is busy.
-
----
-
-## Privacy and responsible AI
-
-SignBridge is designed for minors and accessibility contexts.
-
-- No names are required.
-- No school IDs are stored.
-- No disability records are stored.
-- No video is uploaded.
-- Fingerspell camera processing runs on-device.
-- Learner progress is local and anonymous in this version.
-- Technical benchmark results and learner outcomes are reported separately.
-- SignBridge does not fabricate sign-language video.
-- Concept cards are framed as learning aids, not universal claims about ASL or any sign language.
-
----
-
-## Why this can win
-
-### Educational impact
-
-SignBridge targets a serious and overlooked literacy gap: Deaf/sign-first learners often need explicit support crossing from sign-language structure into written language.
-
-The app teaches one pattern at a time and verifies learning through unseen transfer.
-
-### Agent intelligence
-
-The AI does not just respond. It:
-
-- diagnoses,
-- chooses a skill,
-- explains its decision,
-- maps meaning visually,
-- adapts the route,
-- remembers misconceptions,
-- updates mastery,
-- recommends the next step.
-
-### Scalability
-
-The system is deployable on free-tier infrastructure, works as an installable PWA, and keeps functioning with reviewed offline fallback lessons.
-
-Bring Your Own Content also means teachers can use their own materials instead of waiting for a custom curriculum.
-
-### User experience
-
-The learner sees language structure visually. The teacher sees progress clearly. Accessibility controls are built into the shell instead of being added later.
-
-### X-factor
-
-The Visual Concept Bridge is the memorable part:
-
-```text
-sign-influenced thought structure -> visual role cards -> written-English structure
-```
-
-It makes the invisible language transfer visible.
-
----
-
-## Judge walkthrough
-
-If you have only a few minutes, evaluate this flow:
-
-1. Open Grammar Bridge.
-2. Click `Try a live example`.
-3. Open `Why did the tutor choose this skill?`.
-4. Open the Visual Concept Bridge.
-5. Move or reveal the cards.
-6. Give one wrong guided answer to see hints.
-7. Give the correct answer.
-8. Complete unseen transfer.
-9. Show Learning Proof, Agent Memory, and Agent Decision Timeline.
-10. Open Read & Decode and show that the same profile supports reading.
-11. Open Fingerspell and show on-device hand tracking.
-12. Open Teacher View and export progress.
-
----
-
-## Demo script
-
-The full demo video script is in:
-
-```text
-DEMO-VIDEO.md
-```
-
-The recommended demo message:
-
-```text
-SignBridge is not a grammar checker.
-It is an AI literacy bridge for Deaf and sign-first learners.
-It maps meaning visually, teaches one useful pattern, proves transfer,
-remembers misconceptions, supports reading and fingerspelling,
-and gives teachers evidence.
-```
-
----
-
-## Evidence and evaluation
-
-The `evaluation/` folder includes:
-
-- a 48-case grammar diagnosis benchmark,
-- a fixed 10-item pre/post assessment,
-- a Deaf educator pilot protocol,
-- pilot result templates,
-- pilot summarizer,
-- benchmark runner.
-
-Run:
-
-```bash
-node evaluation/run-benchmark.mjs --limit=5
-```
-
-Important reporting rule:
-
-- Report live AI accuracy separately from fallback reliability.
-- Report benchmark behavior separately from learner outcomes.
-- Do not claim real learner improvement unless a real learner pilot was completed.
-
-The goal is honest evidence, not inflated claims.
+The concept cards are a contrastive learning aid. SignBridge makes no claim that there is a single universal sign-language word order.
 
 ---
 
 ## Architecture
 
+SignBridge is a two-tier application. A React single-page app talks to a small stateless API, which is the only component that holds model credentials.
+
 ```text
 signbridge/
-├── frontend/                 # React + Vite PWA deployed to Vercel
+├── frontend/                 # React + Vite Progressive Web App (Vercel)
 │   ├── src/app/              # shell, onboarding, accessibility, PWA status
 │   ├── src/features/         # grammar, reading, fingerspell, teacher, progress
-│   ├── src/shared/           # API client and shared UI components
-│   └── src/styles/           # editorial design system
-├── backend/                  # Express API deployed to Render
+│   ├── src/shared/           # API client and UI primitives
+│   └── src/styles/           # design system
+├── backend/                  # Express API (Render)
 │   └── src/
-│       ├── features/         # grammar and reading routes
-│       ├── domain/           # skills, validation, fallback lessons
+│       ├── features/         # grammar and reading routes and schemas
+│       ├── domain/           # skills, validation, reviewed offline fallbacks
 │       ├── middleware/       # rate limiting
-│       └── services/         # Gemini transport and key failover
-├── evaluation/               # benchmark, assessment, pilot protocol
-├── render.yaml               # Render Blueprint
+│       └── services/         # model transport and key failover
+├── evaluation/               # benchmark, pre/post assessment, pilot protocol
+├── render.yaml               # Render blueprint
 └── README.md
 ```
 
----
-
-## Local development
-
-Requires **Node.js 20+**.
-
-### Backend
-
-```bash
-cd backend
-npm install
-cp .env.example .env
-# Add GEMINI_API_KEY in .env
-npm run dev
-```
-
-Backend runs on:
-
-```text
-http://localhost:3001
-```
-
-Health check:
-
-```text
-http://localhost:3001/health
-```
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-cp .env.example .env
-# VITE_API_BASE_URL=http://localhost:3001
-npm run dev
-```
-
-Frontend runs on:
-
-```text
-http://localhost:5173
-```
+The browser never receives provider credentials. All prompts, schemas, model selection, and keys live on the backend. Requests are size-limited, rate-limited, schema-validated, and restricted by CORS.
 
 ---
 
-## Tests
+## AI and on-device pipeline
 
-Backend:
+- **Model.** Google Gemini 2.5 Flash, called with strict structured-JSON schemas so every tutoring response is reliable and parseable. Keys rotate across up to three values with automatic failover on rate-limit errors, a 25-second timeout, and a single retry on provider errors.
+- **Diagnosis.** Given the learner's sentence and mastery profile, the model returns the corrected sentence, one focus skill, a plain-language reason, the concept-bridge cards and orderings, a mini-lesson, and two practice items with graduated hints. Every response is validated server-side; invalid output is rejected.
+- **Evaluation.** A deterministic exact-match check handles obvious answers without a model call; otherwise the model judges meaning preservation and correct skill use.
+- **Reading.** The model generates or adapts a passage to a target reading level, biased toward the learner's weakest skill, with vocabulary and comprehension questions.
+- **Fingerspell.** A MediaPipe hand-landmark model runs in the browser with a geometric classifier for the manual-alphabet letters. No server, no cost, works offline after first load.
+- **Learner model.** A versioned, anonymous, local per-skill mastery profile (attempts, independent and hinted successes, transfer success, mastery percentage, review scheduling) with bounded qualitative misconception memory. No names, video, or identifiers are stored.
+- **Reliability.** When the model is unavailable, reviewed deterministic fallbacks keep grammar and reading working, and the app clearly distinguishes live responses from offline practice.
+
+---
+
+## Quick start
+
+Requirements: Node.js 20 or newer, and a free Gemini API key from https://aistudio.google.com/apikey.
 
 ```bash
+# 1. Backend
 cd backend
-npm test
+cp .env.example .env          # add at least GEMINI_API_KEY
+npm install
+npm run dev                   # http://localhost:3001
+
+# 2. Frontend (in a second terminal)
+cd frontend
+cp .env.example .env          # VITE_API_BASE_URL=http://localhost:3001
+npm install
+npm run dev                   # http://localhost:5173
 ```
 
-Frontend:
+Add up to three keys (`GEMINI_API_KEY`, `GEMINI_API_KEY_2`, `GEMINI_API_KEY_3`) for automatic failover and higher free-tier throughput.
+
+To try the core experience, open the Grammar Bridge tab, type a sentence the way a Deaf student might sign it (for example, `Store I go yesterday.`), and start a session. Open the agent's reasoning, then open the Visual Concept Bridge and transform the sentence.
+
+Run the tests and checks:
 
 ```bash
-cd frontend
-npm test
-```
-
-PWA verification:
-
-```bash
-cd frontend
-npm run verify:pwa
-```
-
-Production build:
-
-```bash
-cd frontend
-npm run build
+cd backend  && npm test
+cd frontend && npm test
+cd frontend && npm run verify:pwa
+node evaluation/run-benchmark.mjs --limit=5
 ```
 
 ---
 
 ## Deployment
 
-### Backend on Render
+**Backend (Render).** Root directory `backend`, build `npm install`, start `npm start`, health check `/health`. Environment: `GEMINI_API_KEY` (plus optional `GEMINI_API_KEY_2` / `_3`) and `ALLOWED_ORIGINS` set to the frontend origin.
 
-Root:
+**Frontend (Vercel).** Root directory `frontend`, framework preset Vite, output `dist`. Environment: `VITE_API_BASE_URL` set to the Render backend URL.
 
-```text
-backend
-```
-
-Build:
-
-```bash
-npm install
-```
-
-Start:
-
-```bash
-npm start
-```
-
-Environment variables:
-
-```text
-GEMINI_API_KEY=...
-GEMINI_API_KEY_2=...        # optional
-GEMINI_API_KEY_3=...        # optional
-ALLOWED_ORIGINS=https://signbridge-delta.vercel.app
-```
-
-### Frontend on Vercel
-
-Root:
-
-```text
-frontend
-```
-
-Framework:
-
-```text
-Vite
-```
-
-Output:
-
-```text
-dist
-```
-
-Environment variable:
-
-```text
-VITE_API_BASE_URL=https://signbridge-api-49qf.onrender.com
-```
+Set `ALLOWED_ORIGINS` to the exact frontend origin (no trailing slash). The backend also accepts any `*.vercel.app` origin so preview deployments work out of the box.
 
 ---
 
-## Current limitations
+## Project structure
 
-These are honest limitations, not hidden weaknesses:
-
-- Deaf educator review protocol is ready, but final classroom outcome claims require real review and learner testing.
-- Fingerspell recognizes a reliable subset of manual alphabet handshapes; full sign recognition is future work.
-- The teacher dashboard is local-device based in this hackathon version; full classroom rosters need auth and database persistence.
-- Learner profiles are local and anonymous; multi-device sync is future work.
-- Fallback lessons are reviewed and reliable, but live AI behavior should be reported separately from fallback reliability.
-
----
-
-## Roadmap
-
-Next steps after the hackathon:
-
-1. Deaf educator review of Visual Concept Bridge cards and language.
-2. Small supervised learner pilot using the included pre/post assessment.
-3. Classroom roster dashboard.
-4. Teacher assignment generator.
-5. Family-friendly progress reports.
-6. Expanded fingerspelling recognition.
-7. More sign-language contexts beyond ASL.
-8. Database-backed anonymous classroom deployment.
+- `frontend/src/features/grammar` adaptive writing agent, session machine, mastery profile, and agent policy.
+- `frontend/src/features/reading` reading coach, illustrated passages, bring-your-own-content, and the quiz.
+- `frontend/src/features/fingerspell` MediaPipe hand tracking and the manual-alphabet classifier.
+- `frontend/src/features/teacher` mastery dashboard and report export.
+- `backend/src/features` grammar and reading endpoints with strict schemas.
+- `backend/src/domain` canonical skills, server-side validation, and reviewed offline fallbacks.
+- `evaluation/` a technical skill-diagnosis benchmark, a paired pre/post assessment, and a consent-focused pilot protocol.
 
 ---
 
-## Final positioning
+## Accessibility and responsible AI
 
-SignBridge is a product about access, language, and agency.
+- **Privacy by design.** The learner profile is anonymous and local. No names, video, contact details, or school identifiers are stored. Fingerspelling runs on-device and uploads no video.
+- **Honest reporting.** Technical accuracy and learning outcomes are reported separately, and offline practice is never presented as a live model response.
+- **Authentic sign content.** SignBridge does not auto-generate or fake sign language; any signed content comes from a real signer.
+- **Pedagogical care.** The concept bridge is a contrastive learning aid and explicitly notes there is no single universal sign-language word order.
+- **Inclusive by default.** Dyslexia-friendly typography, high contrast, text scaling, reduced motion, and keyboard-accessible flows are available throughout.
 
-It starts with Deaf and sign-first learners because this is one of the most overlooked literacy gaps in education.
+---
 
-But the larger idea is universal:
+## Tech stack
 
-**Many learners think in one language and are asked to read and write in another. SignBridge shows the bridge.**
-
-**SignBridge - from sign to sentence.**
+React, Vite, Vite-PWA with Workbox, Express, Google Gemini 2.5 Flash, MediaPipe Tasks Vision, and the Node.js test runner.
