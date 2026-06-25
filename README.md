@@ -4,9 +4,23 @@
 
 > Built for **EdTech 3.0 — AI in Education Hackathon** · Track 3: Accessibility & Inclusive Learning.
 
-- 🌐 **Live app:** https://signbridge-delta.vercel.app/
-- ❤️ **Backend health:** https://signbridge-api-49qf.onrender.com/health
-- 💻 **Repository:** https://github.com/RajdeepKushwaha5/signbridge
+- **Live app:** https://signbridge-delta.vercel.app/
+- **Backend health:** https://signbridge-api-49qf.onrender.com/health
+- **Repository:** https://github.com/RajdeepKushwaha5/signbridge
+
+---
+
+## For judges — 60-second tour
+
+New to SignBridge? Here is the fastest way to see what it does:
+
+1. On the **Grammar bridge** tab, type a sentence the way a Deaf student might sign it — for example `Store I go yesterday.` — and click **Start my session**.
+2. Read the diagnosis, then open **"Why did the tutor choose this skill?"** to see the agent's reasoning. Next, click **Open the visual concept bridge**, then **Show the transformation**, and watch the sentence move from sign order into written-English order.
+3. Do the short practice and the unseen transfer to reach the **Learning Proof** card.
+
+Then explore the other tabs: **Read & decode** (illustrated reading, plus paste-your-own-text or upload a PDF), **Fingerspell** (sign recognition using your webcam, fully on-device), and **Teacher view** (mastery dashboard with CSV/JSON export). The **Accessibility** bar (top right) has a dyslexia-friendly mode, high contrast, and larger text.
+
+**A note on the AI:** SignBridge runs on Google Gemini's free tier. Under heavy testing it may reach the rate limit and pause the live model, showing reviewed offline lessons instead — the app keeps working and progress still counts. For the full live experience, the example sentences above always work best. A paid key removes the limit and improves quality.
 
 ---
 
@@ -22,13 +36,13 @@ For many Deaf people, a signed language is their **first** language, and **writt
 
 | Feature | What it does | Why it matters |
 |---|---|---|
-| **🌉 Grammar Bridge** | An adaptive agent diagnoses one high-value grammar skill in the learner's writing, teaches it, and proves it with a new sentence | The core adaptive tutor — reasons, adapts, and remembers |
-| **🧩 Visual Concept Bridge** | Maps meaning into `TIME / PERSON / ACTION / OBJECT / PLACE` cards and animates them from sign-order into English-order | Teaches grammar *visually*, preserving meaning — not rote rules |
-| **📖 Read & Decode** | Generates leveled, **illustrated** passages with key vocabulary and a comprehension quiz; adapts difficulty | Visual-first reading practice, personalized to the learner |
-| **📄 Bring Your Own Content** | A teacher pastes text or uploads a **PDF**; SignBridge turns real classroom material into an accessible, leveled lesson | Works on real-world materials, not just AI topics |
-| **🤟 Fingerspell** | Live, **on-device** recognition of the ASL manual alphabet via webcam | Genuinely sign-aware; free; works offline; no video uploaded |
-| **👩‍🏫 Teacher view** | Read-only mastery dashboard + exportable CSV/JSON progress report | Real-classroom readiness |
-| **📲 Installable PWA** | Installs like an app; reviewed lessons work **offline** | Deployable in low-connectivity, under-resourced schools |
+| **Grammar Bridge** | An adaptive agent diagnoses one high-value grammar skill in the learner's writing, teaches it, and proves it with a new sentence | The core adaptive tutor — reasons, adapts, and remembers |
+| **Visual Concept Bridge** | Maps meaning into `TIME / PERSON / ACTION / OBJECT / PLACE` cards and animates them from sign-order into English-order | Teaches grammar *visually*, preserving meaning — not rote rules |
+| **Read & Decode** | Generates leveled, **illustrated** passages with key vocabulary and a comprehension quiz; adapts difficulty | Visual-first reading practice, personalized to the learner |
+| **Bring Your Own Content** | A teacher pastes text or uploads a **PDF**; SignBridge turns real classroom material into an accessible, leveled lesson | Works on real-world materials, not just AI topics |
+| **Fingerspell** | Live, **on-device** recognition of the ASL manual alphabet via webcam | Genuinely sign-aware; free; works offline; no video uploaded |
+| **Teacher view** | Read-only mastery dashboard + exportable CSV/JSON progress report | Real-classroom readiness |
+| **Installable PWA** | Installs like an app; reviewed lessons work **offline** | Deployable in low-connectivity, under-resourced schools |
 
 Accessibility is first-class throughout: a **dyslexia-friendly mode** (readable font, no all-caps, generous spacing), adjustable text size, high-contrast mode, and reduced-motion support.
 

@@ -234,6 +234,11 @@ button { color: inherit; }
 .notice strong { color: var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; }
 .notice--error { border-left-color: var(--danger); background: #f8e5e1; color: var(--danger); }
 .notice--success { border-left-color: var(--success); background: #e4eee3; }
+.first-hint { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 16px; border: 1px solid var(--accent); background: var(--accent-pale); padding: 12px 16px; }
+.first-hint p { margin: 0; font-family: 'Atkinson Hyperlegible', Arial, sans-serif; font-size: .9rem; line-height: 1.5; }
+.first-hint em { font-style: normal; color: var(--accent); font-weight: 700; }
+.first-hint button { flex: 0 0 auto; border: 0; background: transparent; padding: 0 4px; color: var(--muted); font-size: 1.3rem; line-height: 1; cursor: pointer; }
+.first-hint button:hover { color: var(--ink); }
 .notice--info { border-left-color: var(--line-strong); background: var(--paper-deep); color: var(--muted); }
 .notice--info strong { color: var(--ink); }
 .notice--info b { color: var(--accent); font-weight: 700; }

@@ -155,9 +155,27 @@ function SessionProgress({ stage }) {
   )
 }
 
+function FirstTimeHint() {
+  const [show, setShow] = useState(() => {
+    try { return localStorage.getItem('signbridge.hint.v1') !== 'dismissed' } catch { return true }
+  })
+  if (!show) return null
+  function dismiss() {
+    try { localStorage.setItem('signbridge.hint.v1', 'dismissed') } catch { /* ignore */ }
+    setShow(false)
+  }
+  return (
+    <div className="first-hint" role="note">
+      <p><strong>New here?</strong> Type a sentence the way you would sign it — like <em>“Store I go yesterday.”</em> — and press <strong>Start my session</strong>. Or tap an example below.</p>
+      <button type="button" onClick={dismiss} aria-label="Dismiss hint">×</button>
+    </div>
+  )
+}
+
 function InputStage({ text, setText, loading, onSubmit }) {
   return (
     <>
+      <FirstTimeHint />
       <Panel label="Sentence workspace" meta={loading ? 'Tutor thinking' : 'Ready'}>
         <div className="composer">
           <label htmlFor="sentence">Write it your way</label>
