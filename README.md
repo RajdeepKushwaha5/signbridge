@@ -101,6 +101,35 @@ The concept cards are a contrastive learning aid. SignBridge makes no claim that
 
 SignBridge is a two-tier application. A React single-page app talks to a small stateless API, which is the only component that holds model credentials.
 
+```mermaid
+flowchart LR
+    subgraph Device["On the learner's device (browser)"]
+        UI["React PWA UI"]
+        Profile["Local mastery profile (anonymous)"]
+        Hand["MediaPipe hand tracking (no video upload)"]
+    end
+
+    subgraph Backend["Backend API (Express, Render)"]
+        Routes["Grammar and reading routes"]
+        Schema["Strict JSON schema validation"]
+        Rotate["Key rotation and failover"]
+        Fallback["Reviewed offline fallbacks"]
+    end
+
+    Model["Google Gemini 2.5 Flash"]
+
+    UI -->|"task input, no credentials"| Routes
+    UI --- Profile
+    UI --- Hand
+    Routes --> Schema
+    Routes --> Rotate
+    Routes --> Fallback
+    Rotate -->|"structured prompt"| Model
+    Model -->|"schema-validated JSON"| Schema
+    Schema -->|"diagnosis or passage"| UI
+    Fallback -.->|"when the model is unavailable"| UI
+```
+
 ```text
 signbridge/
 ├── frontend/                 # React + Vite Progressive Web App (Vercel)
@@ -132,6 +161,12 @@ The browser never receives provider credentials. All prompts, schemas, model sel
 - **Fingerspell.** A MediaPipe hand-landmark model runs in the browser with a geometric classifier for the manual-alphabet letters. No server, no cost, works offline after first load.
 - **Learner model.** A versioned, anonymous, local per-skill mastery profile (attempts, independent and hinted successes, transfer success, mastery percentage, review scheduling) with bounded qualitative misconception memory. No names, video, or identifiers are stored.
 - **Reliability.** When the model is unavailable, reviewed deterministic fallbacks keep grammar and reading working, and the app clearly distinguishes live responses from offline practice.
+
+---
+
+## Evaluation
+
+SignBridge is measured on a fixed, reproducible benchmark of 48 cases across the eight grammar skills, plus control inputs (already-correct, ambiguous, and adversarial). On the latest run, the agent reached **87.5% live skill-diagnosis accuracy**, produced a **structurally valid visual concept bridge for 100% of cases**, and returned a **valid, safe response for every case**, with zero failures. Model accuracy and classroom learning outcomes are reported separately. Full method, results, and error analysis are in [EVALUATION.md](EVALUATION.md).
 
 ---
 
