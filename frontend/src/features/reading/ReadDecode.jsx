@@ -23,6 +23,7 @@ function PassageIllustration({ title }) {
         onLoad={() => setStatus('ready')}
         onError={() => setStatus('error')}
       />
+      {status === 'ready' && <figcaption>AI illustration</figcaption>}
     </figure>
   )
 }

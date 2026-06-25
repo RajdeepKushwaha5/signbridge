@@ -298,6 +298,7 @@ function ConceptBridgeStage({ session, dispatch, onContinue }) {
     if (!track || reduceMotion) return
     const nodes = Array.from(track.querySelectorAll('[data-card-id]'))
     const next = {}
+    let moveIndex = 0
     nodes.forEach((node) => {
       const id = node.getAttribute('data-card-id')
       const rect = node.getBoundingClientRect()
@@ -307,12 +308,22 @@ function ConceptBridgeStage({ session, dispatch, onContinue }) {
         const dx = prev.left - rect.left
         const dy = prev.top - rect.top
         if (dx || dy) {
+          const delay = moveIndex * 55 // gentle left-to-right cascade
+          moveIndex += 1
           node.style.transition = 'none'
           node.style.transform = `translate(${dx}px, ${dy}px)`
+          node.classList.add('is-moving')
           requestAnimationFrame(() => {
-            node.style.transition = 'transform 380ms cubic-bezier(.2, .8, .2, 1)'
+            node.style.transition = `transform 440ms cubic-bezier(.22, .9, .26, 1) ${delay}ms`
             node.style.transform = ''
           })
+          const cleanup = (event) => {
+            if (event && event.propertyName !== 'transform') return
+            node.style.transition = ''
+            node.classList.remove('is-moving')
+            node.removeEventListener('transitionend', cleanup)
+          }
+          node.addEventListener('transitionend', cleanup)
         }
       }
     })
