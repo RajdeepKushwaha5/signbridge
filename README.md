@@ -5,7 +5,7 @@
 SignBridge is an AI literacy platform for Deaf and sign-first learners. It addresses a long-standing equity gap in education: written language is usually taught to Deaf students as if it were their first language, when for many it is a *second* language acquired through a different, visual-spatial modality. SignBridge bridges sign-language thinking and written literacy across writing, reading, vocabulary, fingerspelling, and teacher-visible progress, in one adaptive system.
 
 **Live app:** https://signbridge-delta.vercel.app/
-**Repository:** https://github.com/RajdeepKushwaha5/signbridge
+**Demo Video :** https://www.youtube.com/watch?v=SMkHErSc4Ic
 **Backend health:** https://signbridge-api-49qf.onrender.com/health
 
 Built for the EdTech 3.0 AI in Education Hackathon (Track 3: Accessibility & Inclusive Learning).
